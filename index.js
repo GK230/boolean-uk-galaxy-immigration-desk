@@ -2,6 +2,7 @@ const infoSection = document.querySelector(".info-section");
 const listSection = document.querySelector(".list-section");
 const actionSection = document.querySelector(".action-section");
 
+
 const state = {
     applicants: [
         {
@@ -259,10 +260,12 @@ const state = {
             "url": "http://swapi.dev/api/people/10/"
         }
     ],
-    planets: [],
-    acceptedImmigrants: [],
-    accepted: []
+    acceptedImmigrants: [
+        {name: "Luke Skywalker", destination: "Naboo", purpose: "vacation", isTerrorist: "no"}
+    ],
 }
+
+
 
 
 
@@ -333,7 +336,7 @@ function getPlanetData() {
 }
 
 
-function renderApplicantInfo(applicant, homeworldName) {
+function renderApplicantInfo(applicant) {
 
     infoSection.innerHTML = ""
 
@@ -358,9 +361,9 @@ function renderApplicantInfo(applicant, homeworldName) {
     pHomeworldEl.innerText = `Homeworld: ${applicant.homeworld}`
     
     selectBtn = document.createElement('button')
-    selectBtn.innerText = "Select"
+    selectBtn.innerText = "View"
     selectBtn.addEventListener('click', function() {
-        renderImmigrationForm(applicant)
+        isAccepted(applicant)
     })
 
     infoSecEl.append(pNameEl, pGenderEl, pDobEl, pHeightEl, pMassEl, pHomeworldEl, selectBtn)
@@ -463,11 +466,39 @@ function getImmigrationFormData(applicant) {
     }
 
     state.acceptedImmigrants.push(immigrationFormData)
-    console.log(state.acceptedImmigrants)
-
+    console.log(immigrationFormData)
 
 }
 
+function renderAcceptanceNotice(applicant) {
+
+    infoSection.innerHTML = ""
+
+    const secAcceptanceNotice = document.createElement('section')
+
+    const divAcceptedNameEl = document.createElement('div')
+    divAcceptedNameEl.innerText = applicant.name
+
+    const acceptedBtnEl = document.createElement('button')
+    acceptedBtnEl.innerText = "Accepted"
+    acceptedBtnEl.setAttribute('disabled', 'true')
+
+    secAcceptanceNotice.append(divAcceptedNameEl, acceptedBtnEl)
+
+    actionSection.append(secAcceptanceNotice)
+
+}
+
+function isAccepted(applicant) {
+
+    let obj = {}
+    if (obj = state.acceptedImmigrants.find(o => o.name === applicant.name)) {
+        renderAcceptanceNotice(applicant)
+    } else {
+        renderImmigrationForm(applicant)
+    }
+
+}
 
 
 getApplicants()
